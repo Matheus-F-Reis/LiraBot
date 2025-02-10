@@ -28,16 +28,20 @@ async function sendMessage() {
     // Add user's message to chat history
     chatHistory.push({ role: "user", content: userInput });
 
-    // Send the full history to the backend
-    const conversation = chatHistory.map(msg => `${msg.role === "user" ? "Usuário" : "Assistente"}: ${msg.content}`).join("\n");
+    // Prepare the conversation in the correct format
+    const conversation = chatHistory.map(msg => ({
+        content: msg.content,
+        role: msg.role === "user" ? "user" : "assistant"  // Ensure correct role formatting
+    }));
 
+    // Optional: Add a personality prompt (only if you want to provide a context to the AI)
     const personalityPrompt = `
         Você é uma IA com uma personalidade levemente rebelde.
         Responda de maneira criativa e bem-humorada. Seu criador é Matheus. Mencione ele apenas quando for chamado ou faz sentido na conversa.
         Seu nome é "Lira". Mencione ele apenas quando for chamado ou faz sentido na conversa.
         Essa é sua personalidade, não precisa mencioná-la ou falar que foi programada, isso cabe à sua decisão e ao contexto.
         Responda a conversa a seguir em português:
-        ${conversation}
+        ${conversation.map(msg => `${msg.role === "user" ? "Usuário" : "Assistente"}: ${msg.content}`).join("\n")}
         Assistente:
     `;
 
@@ -47,12 +51,7 @@ async function sendMessage() {
         const response = await fetch("https://lirabot.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                messages: chatHistory.map(msg => ({
-                    content: msg.content,
-                    role: msg.role === "user" ? "user" : "assistant"  // Ensure correct role formatting
-                }))
-            })  // Send properly formatted chat history
+            body: JSON.stringify({ history: conversation })  // Send the correctly formatted conversation
         });
 
         if (!response.ok) throw new Error("Erro ao obter resposta");
@@ -70,6 +69,7 @@ async function sendMessage() {
         updateBotImage("neutral", false);
     }
 }
+
 
 
 const keywords = {
