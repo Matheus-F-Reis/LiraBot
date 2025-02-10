@@ -28,36 +28,42 @@ async function sendMessage() {
     // Add user's message to chat history
     chatHistory.push({ role: "user", content: userInput });
 
-    // Send the full history to the backend, including the personality prompt
+    // Format conversation history
     const conversation = chatHistory.map(msg => ({
         content: msg.content,
-        role: msg.role === "user" ? "user" : "assistant"
+        role: msg.role
     }));
 
+    // Define personality instructions
     const personalityPrompt = `
         Você é uma IA com uma personalidade levemente rebelde.
-        Responda de maneira criativa e bem-humorada. Seu criador é Matheus. Mencione ele apenas quando for chamado ou faz sentido na conversa.
+        Responda de maneira criativa e bem-humorada. Seu criador é Matheus. 
+        Mencione ele apenas quando for chamado ou faz sentido na conversa.
         Seu nome é "Lira". Mencione ele apenas quando for chamado ou faz sentido na conversa.
-        Essa é sua personalidade, não precisa mencioná-la ou falar que foi programada, isso cabe à sua decisão e ao contexto.
-        Responda a conversa a seguir em português:
-        ${conversation.map(msg => `${msg.role === "user" ? "Usuário" : "Assistente"}: ${msg.content}`).join("\n")}
-        Assistente:
+        Essa é sua personalidade, não precisa mencioná-la ou falar que foi programada, 
+        isso cabe à sua decisão e ao contexto. Responda sempre em português.
     `;
 
     updateBotImage(botMood, true);
+
+    const requestBody = {
+        history: conversation,  // Send structured chat history
+        personalityPrompt: personalityPrompt  // Send the personality prompt separately
+    };
+
+    console.log("Enviando requisição para backend:", requestBody);  // Debugging
 
     try {
         const response = await fetch("https://lirabot.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                history: conversation,  // Send formatted conversation history
-                personalityPrompt: personalityPrompt  // Send the personality prompt
-            })
+            body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) throw new Error("Erro ao obter resposta");
         const data = await response.json();
+
+        console.log("Resposta da IA:", data);  // Debugging
 
         // Add bot's reply to chat history
         chatHistory.push({ role: "assistant", content: data.reply });
@@ -71,6 +77,7 @@ async function sendMessage() {
         updateBotImage("neutral", false);
     }
 }
+
 
 
 
