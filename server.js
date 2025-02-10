@@ -8,7 +8,8 @@ app.use(cors()); // Then use cors
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Use the API key from the .env file
-const genAI = new GoogleGenerativeAI(AIzaSyCy4MLhxdfKqD3FoFY8aWkeY1Djk8xKAtg);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);  // Correct way to use environment variables
+
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.post("/chat", async (req, res) => {
