@@ -1,3 +1,8 @@
+app.get("/", (req, res) => {
+    res.send("Server is up and running!");
+});
+
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");  // Add body-parser to handle JSON in the request body
