@@ -1,0 +1,65 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #FFD700, #FF6347);
+    color: #333;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FF4500;
+    margin-bottom: 10px;
+}
+
+.bot-image {
+    width: 120px;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.chatbox {
+    width: 100%;
+    height: 400px;
+    background: #f4f4f4;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.input-group {
+    margin-top: 10px;
+}
+
+.falling-emoji {
+    position: fixed;
+    font-size: 2rem;
+    opacity: 1;
+    animation: fall linear forwards;
+    z-index: 9999;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+    }
+}
