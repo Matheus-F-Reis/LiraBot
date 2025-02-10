@@ -28,13 +28,12 @@ async function sendMessage() {
     // Add user's message to chat history
     chatHistory.push({ role: "user", content: userInput });
 
-    // Prepare the conversation in the correct format
+    // Send the full history to the backend, including the personality prompt
     const conversation = chatHistory.map(msg => ({
         content: msg.content,
-        role: msg.role === "user" ? "user" : "assistant"  // Ensure correct role formatting
+        role: msg.role === "user" ? "user" : "assistant"
     }));
 
-    // Optional: Add a personality prompt (only if you want to provide a context to the AI)
     const personalityPrompt = `
         Você é uma IA com uma personalidade levemente rebelde.
         Responda de maneira criativa e bem-humorada. Seu criador é Matheus. Mencione ele apenas quando for chamado ou faz sentido na conversa.
@@ -51,7 +50,10 @@ async function sendMessage() {
         const response = await fetch("https://lirabot.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ history: conversation })  // Send the correctly formatted conversation
+            body: JSON.stringify({
+                history: conversation,  // Send formatted conversation history
+                personalityPrompt: personalityPrompt  // Send the personality prompt
+            })
         });
 
         if (!response.ok) throw new Error("Erro ao obter resposta");
@@ -69,6 +71,7 @@ async function sendMessage() {
         updateBotImage("neutral", false);
     }
 }
+
 
 
 
