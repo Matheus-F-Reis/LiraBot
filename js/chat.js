@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const moodImages = {
     neutral: ["img/Neutral.jpg", "img/NeutralSpeaking.jpg"],
-    happy: ["img/Happy.jpg", "img/happySpeaking.jpg"],
+    happy: ["img/Happy.jpg", "img/HappySpeaking.jpg"],
     sad: ["img/Sad.jpg", "img/SadSpeaking.jpg"],
     angry: ["img/Mad.jpg", "img/MadSpeaking.jpg"],
     surprised: ["img/Surprised.jpg", "img/SurprisedSpeaking.jpg"]
