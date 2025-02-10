@@ -1,14 +1,14 @@
-// server.js (Updated to improve structure and error handling)
 const express = require("express");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-require("dotenv").config(); // Use .env for API keys
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI("AIzaSyCy4MLhxdfKqD3FoFY8aWkeY1Djk8xKAtg");
+// Use the API key from the .env file
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.post("/chat", async (req, res) => {
