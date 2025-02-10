@@ -25,7 +25,10 @@ async function sendMessage() {
     chatbox.innerHTML += `<p><strong>Você:</strong> ${userInput}</p>`;
     document.getElementById("userInput").value = "";
 
+    // Add user's message to chat history
     chatHistory.push({ role: "user", content: userInput });
+
+    // Send the full history to the backend
     const conversation = chatHistory.map(msg => `${msg.role === "user" ? "Usuário" : "Assistente"}: ${msg.content}`).join("\n");
 
     const personalityPrompt = `
@@ -42,18 +45,19 @@ async function sendMessage() {
 
     try {
         const response = await fetch("https://lirabot.onrender.com/chat", {
-
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ history: personalityPrompt })
+            body: JSON.stringify({ history: chatHistory })  // Sending chatHistory directly
         });
 
         if (!response.ok) throw new Error("Erro ao obter resposta");
         const data = await response.json();
 
+        // Add bot's reply to chat history
         chatHistory.push({ role: "assistant", content: data.reply });
         botMood = detectMood(data.reply);
 
+        // Type out the response in chatbox
         typeMessage(chatbox, `<strong>Bot:</strong> `, data.reply, () => updateBotImage(botMood, false));
     } catch (error) {
         console.error("Erro na requisição:", error);
@@ -61,6 +65,7 @@ async function sendMessage() {
         updateBotImage("neutral", false);
     }
 }
+
 
 const keywords = {
     happy: ["feliz", "alegre", "animado", "radiante", "sorridente", "contente", "empolgado", "eufórico", "entusiasmado", "satisfeito", "maravilhado", "divertido", "exultante", "extasiado", "kkk", "haha", "hehe", "hilariante", "grato", "satisfeito", "triunfante", "sorte", "diversão", "comemorando", "animador", "elevado", "encantado", "afortunado", "vivaz", "positivo", "orgulhoso"],
