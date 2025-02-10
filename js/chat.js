@@ -47,7 +47,12 @@ async function sendMessage() {
         const response = await fetch("https://lirabot.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ history: chatHistory })  // Sending chatHistory directly
+            body: JSON.stringify({
+                messages: chatHistory.map(msg => ({
+                    content: msg.content,
+                    role: msg.role === "user" ? "user" : "assistant"  // Ensure correct role formatting
+                }))
+            })  // Send properly formatted chat history
         });
 
         if (!response.ok) throw new Error("Erro ao obter resposta");
