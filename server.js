@@ -1,7 +1,3 @@
-app.get("/", (req, res) => {
-    res.send("Server is up and running!");
-});
-
 
 const express = require("express");
 const cors = require("cors");
@@ -12,6 +8,11 @@ const app = express();  // Initialize app first
 
 app.use(cors());  // Then use cors
 app.use(bodyParser.json());  // Parse JSON request bodies
+
+app.get("/", (req, res) => {
+    res.send("Server is up and running!");
+});
+
 
 // Use the API key from the .env file
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);  // Correct way to use environment variables
